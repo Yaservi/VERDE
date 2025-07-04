@@ -1,0 +1,233 @@
+<div class="container mx-auto px-4 py-8">
+  <div *ngIf="loading" class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+  </div>
+
+
+  <!-- Welcome message for home page (when no animal is loaded and no error) -->
+  <div *ngIf="!loading && !error && !animal" class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 text-center mb-8">
+    <h1 class="text-3xl font-bold text-green-800 mb-4">Bienvenido a Fauna Enriquillo</h1>
+    <p class="text-gray-700 mb-6">Explora la biodiversidad de la región de Enriquillo y descubre las especies que habitan en este ecosistema único.</p>
+  </div>
+
+  <div *ngIf="!loading && !error && animal && !showInErrorSection" class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8">
+    <!-- Admin/Editor buttons -->
+    <div *ngIf="isAdmin" class="flex justify-end mb-4">
+      <button class="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-md mr-2">
+        <i class="fas fa-edit mr-1"></i> Editar
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md">
+        <i class="fas fa-trash-alt mr-1"></i> Eliminar
+      </button>
+    </div>
+
+    <!-- Animal details -->
+    <div class="flex flex-col md:flex-row">
+      <!-- Main image with distribution map in bottom right corner -->
+      <div class="md:w-1/2 mb-6 md:mb-0 md:pr-6 relative">
+        <div class="w-full h-auto relative rounded-lg shadow-md overflow-hidden">
+          <img [src]="animal.imagenUrl" [alt]="animal.nombreComun" class="w-full h-auto">
+          <!-- Distribution map thumbnail in bottom left corner -->
+          <div class="absolute bottom-2 left-2 w-[25%] h-[25%] rounded-sm overflow-hidden border border-white shadow-lg cursor-pointer" (click)="openMapModal()">
+            <img [src]="animal.distribucionGeograficaUrl" alt="Mapa de distribución" class="w-full h-full object-cover">
+          </div>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="md:w-1/2">
+        <h1 class="text-3xl font-bold text-green-800 mb-2">{{animal.nombreComun}}</h1>
+        <h2 class="text-xl text-gray-600 italic mb-6">{{animal.nombreCientifico}}</h2>
+
+        <!-- Tags/Selects -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-green-50 p-3 rounded-md border border-green-200">
+            <span class="text-sm text-gray-500">Dieta</span>
+            <p class="font-medium text-green-800">{{animal.dieta}}</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-md border border-green-200">
+            <span class="text-sm text-gray-500">Estado de conservación</span>
+            <p class="font-medium text-green-800">{{animal.estadoDeConservacion}}</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-md border border-green-200">
+            <span class="text-sm text-gray-500">Forma de reproducción</span>
+            <p class="font-medium text-green-800">{{animal.formaDeReproduccion}}</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-md border border-green-200">
+            <span class="text-sm text-gray-500">Desarrollo embrionario</span>
+            <p class="font-medium text-green-800">{{animal.tipoDesarrolloEmbrionario}}</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-md border border-green-200">
+            <span class="text-sm text-gray-500">Estatus biogeográfico</span>
+            <p class="font-medium text-green-800" *ngIf="animal.estatusBiogeografico">{{animal.estatusBiogeografico}}</p>
+            <p class="font-medium text-green-800" *ngIf="!animal.estatusBiogeografico">No disponible</p>
+          </div>
+        </div>
+
+        <!-- Classification table -->
+        <div class="mt-4">
+          <h3 class="text-xl font-semibold text-green-700 mb-3">Clasificación taxonómica</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full bg-white border border-gray-200 text-sm">
+              <tbody>
+                <tr class="bg-gray-50">
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Filo</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.filo}}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Clase</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.clase}}</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Orden</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.orden}}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Familia</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.familia}}</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Género</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.genero}}</td>
+                </tr>
+                <tr>
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Especie</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.especie}}</td>
+                </tr>
+                <tr class="bg-gray-50" *ngIf="animal.subEspecie">
+                  <td class="py-1 px-2 border-b border-gray-200 font-medium">Subespecie</td>
+                  <td class="py-1 px-2 border-b border-gray-200">{{animal.subEspecie}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for full-size distribution map -->
+    <div *ngIf="showMapModal" class="fixed inset-0 bg-black bg-opacity-50 z-[1100] flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+          <h3 class="text-xl font-semibold text-green-700">Distribución geográfica</h3>
+          <button (click)="closeMapModal()" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="p-4 overflow-auto flex-grow">
+          <img [src]="animal.distribucionGeograficaUrl" alt="Mapa de distribución" class="w-full h-auto">
+        </div>
+      </div>
+    </div>
+
+    <!-- Observations -->
+    <div *ngIf="animal.observaciones" class="mt-8">
+      <h3 class="text-xl font-semibold text-green-700 mb-4">Observaciones</h3>
+      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <p class="text-gray-700 break-words whitespace-normal overflow-wrap-normal leading-relaxed">{{animal.observaciones}}</p>
+      </div>
+    </div>
+
+    <!-- Metadata for admin/editor -->
+    <div *ngIf="isAdmin" class="mt-8 text-sm text-gray-500">
+      <p>Creado: {{animal.createdAt | date:'medium'}}</p>
+      <p>Última actualización: {{animal.updatedAt | date:'medium'}}</p>
+    </div>
+  </div>
+
+  <!-- Contenido adicional sobre especies en peligro de extinción -->
+  <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
+    <h1 class="text-3xl font-bold text-green-800 mb-6 text-center">Especies en Peligro de Extinción</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+        <h2 class="text-xl font-semibold text-green-700 mb-4">¿Por qué es importante la conservación?</h2>
+        <p class="text-gray-700 mb-4">
+          Cada especie desempeña un papel único en su ecosistema. La pérdida de biodiversidad afecta directamente a la salud de nuestro planeta y a nuestra propia supervivencia. La conservación de la biodiversidad es fundamental para mantener los servicios ecosistémicos que sustentan la vida en la Tierra.
+        </p>
+        <p class="text-gray-700 mb-4">
+          Los ecosistemas saludables proporcionan servicios esenciales como la purificación del agua, la regulación del clima, la formación del suelo y el ciclo de nutrientes. Cuando perdemos especies, estos sistemas complejos se debilitan, poniendo en riesgo nuestra propia existencia.
+        </p>
+        <ul class="space-y-3">
+          <li class="flex items-start">
+            <i class="fas fa-leaf text-green-600 mt-1 mr-2"></i>
+            <span class="font-medium">Mantienen el equilibrio ecológico</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-flask text-green-600 mt-1 mr-2"></i>
+            <span class="font-medium">Fuente de nuevos medicamentos</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-seedling text-green-600 mt-1 mr-2"></i>
+            <span class="font-medium">Polinizan nuestros cultivos</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-tint text-green-600 mt-1 mr-2"></i>
+            <span class="font-medium">Protegen recursos hídricos</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-amber-50 p-6 rounded-lg border border-amber-200">
+        <h2 class="text-xl font-semibold text-amber-700 mb-4">Principales amenazas</h2>
+        <p class="text-gray-700 mb-4">
+          Las especies enfrentan múltiples peligros causados principalmente por actividades humanas. La acelerada tasa de extinción actual es entre 100 y 1,000 veces mayor que la tasa natural, lo que ha llevado a los científicos a advertir que estamos entrando en la sexta extinción masiva de la historia de la Tierra.
+        </p>
+        <p class="text-gray-700 mb-4">
+          A diferencia de las extinciones masivas anteriores, causadas por eventos como impactos de asteroides o erupciones volcánicas, la crisis actual es resultado directo de la actividad humana. Entender estas amenazas es el primer paso para combatirlas.
+        </p>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="font-medium text-amber-700">Pérdida de hábitat</span>
+              <span class="text-amber-700">85%</span>
+            </div>
+            <div class="w-full bg-amber-200 rounded-full h-2.5">
+              <div class="bg-amber-600 h-2.5 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="font-medium text-amber-700">Cambio climático</span>
+              <span class="text-amber-700">70%</span>
+            </div>
+            <div class="w-full bg-amber-200 rounded-full h-2.5">
+              <div class="bg-amber-600 h-2.5 rounded-full" style="width: 70%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="font-medium text-amber-700">Caza furtiva</span>
+              <span class="text-amber-700">60%</span>
+            </div>
+            <div class="w-full bg-amber-200 rounded-full h-2.5">
+              <div class="bg-amber-600 h-2.5 rounded-full" style="width: 60%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="font-medium text-amber-700">Contaminación</span>
+              <span class="text-amber-700">55%</span>
+            </div>
+            <div class="w-full bg-amber-200 rounded-full h-2.5">
+              <div class="bg-amber-600 h-2.5 rounded-full" style="width: 55%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center">
+      <h2 class="text-2xl font-bold text-green-800 mb-6">Únete a nuestros esfuerzos de conservación</h2>
+      <p class="text-gray-700 max-w-2xl mx-auto mb-6">
+        Tu apoyo puede marcar la diferencia. Participa en nuestros programas de conservación, adopta una especie o haz una donación para ayudar a proteger a los animales en peligro de extinción.
+      </p>
+      <button class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105">
+        <i class="fas fa-paw mr-2"></i>Quiero ayudar
+      </button>
+    </div>
+  </div>
+</div>
