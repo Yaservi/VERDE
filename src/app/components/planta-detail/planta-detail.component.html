@@ -5,7 +5,6 @@
 
 
   <div *ngIf="!loading && !error && planta && !showInErrorSection" class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8">
-    <!-- Admin/Editor buttons -->
     <div *ngIf="isAdmin" class="flex justify-end mb-4">
       <button class="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-md mr-2">
         <i class="fas fa-edit mr-1"></i> Editar
@@ -15,35 +14,28 @@
       </button>
     </div>
 
-    <!-- Plant details -->
     <div class="flex flex-col md:flex-row">
-      <!-- Main image with distribution map in bottom right corner -->
       <div class="md:w-1/2 mb-6 md:mb-0 md:pr-6 relative">
         <div class="w-full h-auto relative rounded-lg shadow-md overflow-hidden">
           <img [src]="planta.imagenUrl" [alt]="planta.nombreComun" class="w-full h-auto">
-          <!-- Distribution map thumbnail in bottom left corner -->
           <div class="absolute bottom-2 left-2 w-[25%] h-[25%] rounded-sm overflow-hidden border border-white shadow-lg cursor-pointer" (click)="openMapModal()">
             <img [src]="planta.distribucionGeograficaUrl" alt="Mapa de distribución" class="w-full h-full object-cover">
           </div>
         </div>
       </div>
 
-      <!-- Details -->
       <div class="md:w-1/2">
         <h1 class="text-3xl font-bold text-green-800 mb-2">{{planta.nombreComun}}</h1>
         <h2 class="text-xl text-gray-600 italic mb-6">{{planta.nombreCientifico}}</h2>
-
-        <!-- Tags -->
         <div class="flex flex-wrap gap-2 mb-6">
           <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-            {{planta.estadoDeConservacion}}
+            {{getEstadoDeConservacionText(planta.estadoDeConservacion)}}
           </div>
           <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-            {{planta.estatusBiogeografico}}
+            {{getEstatusBiogeograficoText(planta.estatusBiogeografico)}}
           </div>
         </div>
 
-        <!-- Classification list -->
         <div class="mt-4">
           <h3 class="text-xl font-semibold text-green-700 mb-3">Clasificación taxonómica</h3>
           <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
@@ -60,8 +52,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal for full-size distribution map -->
     <div *ngIf="showMapModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -76,15 +66,12 @@
       </div>
     </div>
 
-    <!-- Observations -->
     <div *ngIf="planta.observaciones" class="mt-8">
       <h3 class="text-xl font-semibold text-green-700 mb-4">Observaciones</h3>
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
         <p class="text-gray-700 break-words whitespace-normal overflow-wrap-normal leading-relaxed">{{planta.observaciones}}</p>
       </div>
     </div>
-
-    <!-- Metadata for admin/editor -->
     <div *ngIf="isAdmin" class="mt-8 text-sm text-gray-500">
       <p>Creado: {{planta.createdAt | date:'medium'}}</p>
       <p>Última actualización: {{planta.updatedAt | date:'medium'}}</p>

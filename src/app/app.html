@@ -110,7 +110,6 @@
     opacity: 1;
   }
 
-  /* ESTILOS PARA EL NAVBAR TRANSPARENTE/SCROLL */
   header {
     position: fixed;
     top: 0;
@@ -126,7 +125,6 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
 
-  /* ESTILOS PARA EL BANNER */
   .wikiaves-banner {
     position: relative;
     margin-top: -64px;
@@ -166,7 +164,7 @@
     border: none;
     font-size: 16px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    color: #0f4429; /* Dark green color for text */
+    color: #0f4429;
   }
 
   .wikiaves-search i {
@@ -185,7 +183,6 @@
     margin: 20px 0;
   }
 
-  /* Estilos para los resultados de búsqueda */
   .search-results {
     position: absolute;
     top: 100%;
@@ -259,12 +256,9 @@
   }
 </style>
 
-<!-- Header fijo y transparente -->
 <header [class.scrolled]="isScrolled">
   <div class="container mx-auto flex items-center h-16 px-4 relative">
-    <!-- Contenedor del menú y búsqueda (centrado) -->
     <div class="menu-container w-full">
-      <!-- Menú principal simplificado -->
       <nav id="main-menu" class="flex items-center justify-center">
         <div class="flex space-x-8 text-gray-700 font-medium">
           <a href="#" class="hover:text-green-700 transition-colors">Inicio</a>
@@ -275,15 +269,12 @@
         </div>
       </nav>
 
-      <!-- Botón de búsqueda (alineado a la derecha) -->
       <button id="search-init-btn" class="search-btn absolute right-0" (click)="toggleNavbarSearch()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
-
-      <!-- Contenedor para barra de búsqueda -->
       <div id="search-container" class="search-container" [class.expanded]="navbarSearchExpanded">
         <input
           id="search-input"
@@ -302,8 +293,6 @@
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
-
-        <!-- Resultados de búsqueda para la barra del navbar -->
         <div *ngIf="navbarSearchExpanded && (navbarSearchResults.length > 0 || navbarSearchLoading || navbarSearchTerm)" class="search-results">
           <div *ngIf="navbarSearchLoading" class="search-loading">
             <div class="flex justify-center items-center py-2">
@@ -319,9 +308,7 @@
             </div>
           </div>
 
-          <!-- Resultados agrupados por tipo -->
           <div *ngIf="!navbarSearchLoading && navbarSearchResults.length > 0">
-            <!-- Animales -->
             <div *ngIf="navbarGroupedResults['animal'] && navbarGroupedResults['animal'].length > 0">
               <div class="search-result-group-header bg-amber-100 text-amber-800 px-3 py-1 font-medium">
                 Animales ({{navbarGroupedResults['animal'].length}})
@@ -335,7 +322,6 @@
               </div>
             </div>
 
-            <!-- Plantas -->
             <div *ngIf="navbarGroupedResults['plant'] && navbarGroupedResults['plant'].length > 0">
               <div class="search-result-group-header bg-emerald-100 text-emerald-800 px-3 py-1 font-medium">
                 Plantas ({{navbarGroupedResults['plant'].length}})
@@ -348,8 +334,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- Hábitats -->
             <div *ngIf="navbarGroupedResults['habitat'] && navbarGroupedResults['habitat'].length > 0">
               <div class="search-result-group-header bg-blue-100 text-blue-800 px-3 py-1 font-medium">
                 Hábitats ({{navbarGroupedResults['habitat'].length}})
@@ -369,7 +353,6 @@
   </div>
 </header>
 
-<!-- Banner ajustado para cubrir toda la parte superior -->
 <div class="wikiaves-banner">
   <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Aves en peligro de extinción">
   <div class="wikiaves-banner-content">
@@ -388,7 +371,6 @@
         (input)="onBannerSearch()"
       >
 
-      <!-- Resultados de búsqueda para la barra del banner -->
       <div *ngIf="bannerSearchResults.length > 0 || bannerSearchLoading || bannerSearchTerm" class="search-results">
         <div *ngIf="bannerSearchLoading" class="search-loading">
           <div class="flex justify-center items-center py-2">
@@ -404,9 +386,7 @@
           </div>
         </div>
 
-        <!-- Resultados agrupados por tipo -->
         <div *ngIf="!bannerSearchLoading && bannerSearchResults.length > 0">
-          <!-- Animales -->
           <div *ngIf="bannerGroupedResults['animal'] && bannerGroupedResults['animal'].length > 0">
             <div class="search-result-group-header bg-amber-100 text-amber-800 px-3 py-1 font-medium">
               Animales ({{bannerGroupedResults['animal'].length}})
@@ -420,7 +400,6 @@
             </div>
           </div>
 
-          <!-- Plantas -->
           <div *ngIf="bannerGroupedResults['plant'] && bannerGroupedResults['plant'].length > 0">
             <div class="search-result-group-header bg-emerald-100 text-emerald-800 px-3 py-1 font-medium">
               Plantas ({{bannerGroupedResults['plant'].length}})
@@ -434,7 +413,6 @@
             </div>
           </div>
 
-          <!-- Hábitats -->
           <div *ngIf="bannerGroupedResults['habitat'] && bannerGroupedResults['habitat'].length > 0">
             <div class="search-result-group-header bg-blue-100 text-blue-800 px-3 py-1 font-medium">
               Hábitats ({{bannerGroupedResults['habitat'].length}})
@@ -453,9 +431,7 @@
   </div>
 </div>
 
-<!-- The entity details section has been removed as it's now displayed in the animal-detail component's error section -->
 
-<!-- Router outlet para las páginas de detalle -->
 <div class="detail-container mt-8">
   <router-outlet></router-outlet>
 </div>
@@ -497,7 +473,6 @@
         </div>
       </div>
 
-      <!-- Apartado para editores/administradores (ahora en la cuarta columna) -->
       <div class="text-center">
         <p class="text-green-200 mb-2">¿Eres editor o administrador?</p>
         <div class="flex justify-center">

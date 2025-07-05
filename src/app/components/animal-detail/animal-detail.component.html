@@ -4,14 +4,12 @@
   </div>
 
 
-  <!-- Welcome message for home page (when no animal is loaded and no error) -->
   <div *ngIf="!loading && !error && !animal" class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 text-center mb-8">
     <h1 class="text-3xl font-bold text-green-800 mb-4">Bienvenido a Fauna Enriquillo</h1>
     <p class="text-gray-700 mb-6">Explora la biodiversidad de la región de Enriquillo y descubre las especies que habitan en este ecosistema único.</p>
   </div>
 
   <div *ngIf="!loading && !error && animal && !showInErrorSection" class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8">
-    <!-- Admin/Editor buttons -->
     <div *ngIf="isAdmin" class="flex justify-end mb-4">
       <button class="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-md mr-2">
         <i class="fas fa-edit mr-1"></i> Editar
@@ -21,50 +19,43 @@
       </button>
     </div>
 
-    <!-- Animal details -->
     <div class="flex flex-col md:flex-row">
-      <!-- Main image with distribution map in bottom right corner -->
       <div class="md:w-1/2 mb-6 md:mb-0 md:pr-6 relative">
         <div class="w-full h-auto relative rounded-lg shadow-md overflow-hidden">
           <img [src]="animal.imagenUrl" [alt]="animal.nombreComun" class="w-full h-auto">
-          <!-- Distribution map thumbnail in bottom left corner -->
           <div class="absolute bottom-2 left-2 w-[25%] h-[25%] rounded-sm overflow-hidden border border-white shadow-lg cursor-pointer" (click)="openMapModal()">
             <img [src]="animal.distribucionGeograficaUrl" alt="Mapa de distribución" class="w-full h-full object-cover">
           </div>
         </div>
       </div>
 
-      <!-- Details -->
       <div class="md:w-1/2">
         <h1 class="text-3xl font-bold text-green-800 mb-2">{{animal.nombreComun}}</h1>
         <h2 class="text-xl text-gray-600 italic mb-6">{{animal.nombreCientifico}}</h2>
-
-        <!-- Tags/Selects -->
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Dieta</span>
-            <p class="font-medium text-green-800">{{animal.dieta}}</p>
+            <p class="font-medium text-green-800">{{getDietaText(animal.dieta)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Estado de conservación</span>
-            <p class="font-medium text-green-800">{{animal.estadoDeConservacion}}</p>
+            <p class="font-medium text-green-800">{{getEstadoDeConservacionText(animal.estadoDeConservacion)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Forma de reproducción</span>
-            <p class="font-medium text-green-800">{{animal.formaDeReproduccion}}</p>
+            <p class="font-medium text-green-800">{{getFormaDeReproduccionText(animal.formaDeReproduccion)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Desarrollo embrionario</span>
-            <p class="font-medium text-green-800">{{animal.tipoDesarrolloEmbrionario}}</p>
+            <p class="font-medium text-green-800">{{getTipoDesarrolloEmbrionarioText(animal.tipoDesarrolloEmbrionario)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Estatus biogeográfico</span>
-            <p class="font-medium text-green-800" *ngIf="animal.estatusBiogeografico">{{animal.estatusBiogeografico}}</p>
+            <p class="font-medium text-green-800" *ngIf="animal.estatusBiogeografico">{{getEstatusBiogeograficoText(animal.estatusBiogeografico)}}</p>
             <p class="font-medium text-green-800" *ngIf="!animal.estatusBiogeografico">No disponible</p>
           </div>
         </div>
 
-        <!-- Classification table -->
         <div class="mt-4">
           <h3 class="text-xl font-semibold text-green-700 mb-3">Clasificación taxonómica</h3>
           <div class="overflow-x-auto">
@@ -105,7 +96,6 @@
       </div>
     </div>
 
-    <!-- Modal for full-size distribution map -->
     <div *ngIf="showMapModal" class="fixed inset-0 bg-black bg-opacity-50 z-[1100] flex items-center justify-center p-4">
       <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         <div class="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -120,22 +110,18 @@
       </div>
     </div>
 
-    <!-- Observations -->
     <div *ngIf="animal.observaciones" class="mt-8">
       <h3 class="text-xl font-semibold text-green-700 mb-4">Observaciones</h3>
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
         <p class="text-gray-700 break-words whitespace-normal overflow-wrap-normal leading-relaxed">{{animal.observaciones}}</p>
       </div>
     </div>
-
-    <!-- Metadata for admin/editor -->
     <div *ngIf="isAdmin" class="mt-8 text-sm text-gray-500">
       <p>Creado: {{animal.createdAt | date:'medium'}}</p>
       <p>Última actualización: {{animal.updatedAt | date:'medium'}}</p>
     </div>
   </div>
 
-  <!-- Contenido adicional sobre especies en peligro de extinción -->
   <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 mt-8">
     <h1 class="text-3xl font-bold text-green-800 mb-6 text-center">Especies en Peligro de Extinción</h1>
 

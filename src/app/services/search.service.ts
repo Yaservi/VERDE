@@ -4,7 +4,6 @@ import { Observable, Subject, of, forkJoin } from 'rxjs';
 import { debounceTime, switchMap, map, catchError } from 'rxjs/operators';
 import { SearchResult } from '../models/models';
 
-// Define a type for search source
 export type SearchSource = 'navbar' | 'banner';
 
 @Injectable({
@@ -12,16 +11,13 @@ export type SearchSource = 'navbar' | 'banner';
 })
 export class SearchService {
   private searchTerms = new Subject<{term: string, source: SearchSource}>();
-  private debounceTimeMs = 500; // 500ms debounce time
+  private debounceTimeMs = 500;
 
   constructor(private apiService: ApiService) { }
-
-  // Method to push a search term into the observable stream
   search(term: string, source: SearchSource): void {
     this.searchTerms.next({term, source});
   }
 
-  // Returns an observable of search results with debounce
   getSearchResults(): Observable<{results: SearchResult[], source: SearchSource}> {
     return this.searchTerms.pipe(
       debounceTime(this.debounceTimeMs),
@@ -29,13 +25,10 @@ export class SearchService {
         const { term, source } = searchData;
 
         if (!term.trim()) {
-          // If search term is empty, return empty array with source
           return of({results: [], source});
         }
 
-        // Search in all three categories (animal, plant, habitat) by both common and scientific name
         return forkJoin([
-          // Animal searches
           this.apiService.searchAnimalByCommonName(term).pipe(
             map(animals => this.mapToSearchResults(animals, 'animal')),
             catchError(() => of([]))
@@ -45,7 +38,6 @@ export class SearchService {
             catchError(() => of([]))
           ),
 
-          // Plant searches
           this.apiService.searchPlantByCommonName(term).pipe(
             map(plants => this.mapToSearchResults(plants, 'plant')),
             catchError(() => of([]))
@@ -55,7 +47,6 @@ export class SearchService {
             catchError(() => of([]))
           ),
 
-          // Habitat searches
           this.apiService.searchHabitatByCommonName(term).pipe(
             map(habitats => this.mapToSearchResults(habitats, 'habitat')),
             catchError(() => of([]))
@@ -65,14 +56,11 @@ export class SearchService {
             catchError(() => of([]))
           )
         ]).pipe(
-          // Flatten the array of arrays and remove duplicates
           map(results => {
             const flatResults = results.flat();
-            // Remove duplicates by ID
             const uniqueResults = Array.from(
               new Map(flatResults.map(item => [item.id, item])).values()
             );
-            // Return results with source information
             return {results: uniqueResults, source};
           })
         );
@@ -80,19 +68,15 @@ export class SearchService {
     );
   }
 
-  // Helper method to map API results to SearchResult objects
   private mapToSearchResults(items: any[], tipo: 'animal' | 'plant' | 'habitat'): SearchResult[] {
     if (!items || !Array.isArray(items)) {
       return [];
     }
 
-    // Filter out items without an ID and map the rest to SearchResult objects
     return items
       .filter(item => {
-        // Log the item to see what's coming from the API
         console.log(`Search result item (${tipo}):`, item);
 
-        // Check if the item has an ID based on entity type
         let hasId = false;
         if (tipo === 'animal' && item.idAnimal) {
           hasId = true;
@@ -106,12 +90,11 @@ export class SearchService {
 
         if (!hasId) {
           console.error(`Error: Item does not have an ID (${tipo}):`, item);
-          return false; // Skip items without an ID
+          return false;
         }
         return true;
       })
       .map(item => {
-        // Extract the correct ID based on entity type
         let id = item.id;
         if (tipo === 'animal' && item.idAnimal) {
           id = item.idAnimal;
