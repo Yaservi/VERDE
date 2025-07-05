@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { Habitat } from '../../models/models';
 import { Subscription } from 'rxjs';
+import { getClimaText } from '../../models/enums';
 
 @Component({
   selector: 'app-habitat-detail',
@@ -30,33 +31,26 @@ export class HabitatDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Check if user is admin or editor (only in browser environment)
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
-        // In a real app, you would decode the token and check the role
-        // For now, we'll just check if a token exists
         this.isAdmin = true;
       }
 
-      // Get stored API URL if available
       const storedApiUrl = localStorage.getItem('apiBaseUrl');
       if (storedApiUrl) {
         this.apiUrl = storedApiUrl;
       } else {
-        // Default API URL
         this.apiUrl = 'https://localhost:7057/api';
       }
     }
 
-    // Subscribe to route parameter changes
     this.routeSubscription = this.route.paramMap.subscribe((params: ParamMap) => {
       this.loadHabitatData(params);
     });
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription when component is destroyed
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
       this.routeSubscription = null;
@@ -128,5 +122,10 @@ export class HabitatDetailComponent implements OnInit, OnDestroy {
 
   closeMapModal(): void {
     this.showMapModal = false;
+  }
+
+  // Utility method to convert enum value to text
+  getClimaText(value: number | string): string {
+    return getClimaText(value);
   }
 }

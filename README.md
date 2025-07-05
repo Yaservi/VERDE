@@ -1,121 +1,121 @@
 # FaunaEnriquilloFrontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+Este proyecto fue generado con [Angular CLI](https://github.com/angular/angular-cli) versión 20.0.2.
 
-## Development server
+## Servidor de desarrollo
 
-To start a local development server, run:
+Para iniciar un servidor de desarrollo local, ejecuta:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Una vez que el servidor esté en funcionamiento, abre tu navegador y navega a `http://localhost:4200/`. La aplicación se recargará automáticamente cada vez que modifiques cualquiera de los archivos fuente.
 
-### HTTPS Development Server
+### Servidor de desarrollo HTTPS
 
-This project is configured to support HTTPS. To start the development server with HTTPS enabled, run:
+Este proyecto está configurado para soportar HTTPS. Para iniciar el servidor de desarrollo con HTTPS habilitado, ejecuta:
 
 ```bash
 npm run start:https
 ```
 
-Or directly with Angular CLI:
+O directamente con Angular CLI:
 
 ```bash
 ng serve --ssl
 ```
 
-Once the server is running, open your browser and navigate to `https://localhost:4200/`. 
+Una vez que el servidor esté en funcionamiento, abre tu navegador y navega a `https://localhost:4200/`.
 
-Note: Since the development server uses a self-signed certificate, your browser may display a security warning. This is normal for development environments. You can safely proceed to the website by accepting the certificate warning in your browser.
+Nota: Dado que el servidor de desarrollo utiliza un certificado autofirmado, tu navegador puede mostrar una advertencia de seguridad. Esto es normal en entornos de desarrollo. Puedes proceder de manera segura al sitio web aceptando la advertencia del certificado en tu navegador.
 
-### API Proxy for CORS Issues
+### Proxy API para problemas de CORS
 
-This project includes a proxy configuration to handle CORS issues when connecting to the backend API. The proxy forwards requests from the Angular development server to the backend API server, avoiding cross-origin restrictions.
+Este proyecto incluye una configuración de proxy para manejar problemas de CORS al conectarse a la API backend. El proxy reenvía las solicitudes desde el servidor de desarrollo de Angular al servidor de API backend, evitando restricciones de origen cruzado.
 
-To start the development server with the proxy enabled, run:
+Para iniciar el servidor de desarrollo con el proxy habilitado, ejecuta:
 
 ```bash
 npm run start:proxy
 ```
 
-This will start the development server with the proxy configuration defined in `proxy.conf.json`. The proxy is configured to forward requests to `/api` to the backend server at `https://localhost:7057`.
+Esto iniciará el servidor de desarrollo con la configuración de proxy definida en `proxy.conf.json`. El proxy está configurado para reenviar solicitudes a `/api` al servidor backend en `https://localhost:7057`.
 
-#### How the Proxy Works
+#### Cómo funciona el Proxy
 
-1. The Angular application makes requests to relative URLs (e.g., `/api/v1/animal/search/...`)
-2. The development server intercepts these requests and forwards them to the configured backend URL
-3. The response from the backend is returned to the application as if it came from the same origin
+1. La aplicación Angular realiza solicitudes a URLs relativas (por ejemplo, `/api/v1/animal/search/...`)
+2. El servidor de desarrollo intercepta estas solicitudes y las reenvía a la URL del backend configurada
+3. La respuesta del backend se devuelve a la aplicación como si viniera del mismo origen
 
-This approach eliminates CORS issues during development without requiring changes to the backend server.
+Este enfoque elimina los problemas de CORS durante el desarrollo sin requerir cambios en el servidor backend.
 
-## Code scaffolding
+## Generación de código
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular CLI incluye potentes herramientas de generación de código. Para generar un nuevo componente, ejecuta:
 
 ```bash
-ng generate component component-name
+ng generate component nombre-componente
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Para una lista completa de esquemas disponibles (como `components`, `directives` o `pipes`), ejecuta:
 
 ```bash
 ng generate --help
 ```
 
-## Building
+## Compilación
 
-To build the project run:
+Para compilar el proyecto ejecuta:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Esto compilará tu proyecto y almacenará los artefactos de compilación en el directorio `dist/`. Por defecto, la compilación de producción optimiza tu aplicación para rendimiento y velocidad.
 
-## Running unit tests
+## Ejecutando pruebas unitarias
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Para ejecutar pruebas unitarias con el ejecutor de pruebas [Karma](https://karma-runner.github.io), utiliza el siguiente comando:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Ejecutando pruebas end-to-end
 
-For end-to-end (e2e) testing, run:
+Para pruebas end-to-end (e2e), ejecuta:
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI no viene con un framework de pruebas end-to-end por defecto. Puedes elegir uno que se adapte a tus necesidades.
 
 ## Tailwind CSS
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling. Tailwind CSS is a utility-first CSS framework that allows you to build custom designs without leaving your HTML.
+Este proyecto utiliza [Tailwind CSS](https://tailwindcss.com/) para el estilizado. Tailwind CSS es un framework CSS utility-first que te permite construir diseños personalizados sin salir de tu HTML.
 
-### Using Tailwind CSS
+### Usando Tailwind CSS
 
-You can use Tailwind CSS utility classes directly in your HTML templates. For example:
+Puedes usar las clases de utilidad de Tailwind CSS directamente en tus plantillas HTML. Por ejemplo:
 
 ```html
 <div class="bg-blue-500 text-white p-4 rounded-lg shadow-md">
-  This is a styled div using Tailwind CSS
+  Este es un div estilizado usando Tailwind CSS
 </div>
 ```
 
-### Configuration
+### Configuración
 
-Tailwind CSS is configured in the following files:
+Tailwind CSS está configurado en los siguientes archivos:
 
-- `tailwind.config.js`: Contains the Tailwind CSS configuration, including theme customization and plugin settings.
-- `postcss.config.js`: Configures PostCSS to use Tailwind CSS and Autoprefixer.
-- `src/styles.css`: Imports Tailwind CSS's base, components, and utilities styles.
+- `tailwind.config.js`: Contiene la configuración de Tailwind CSS, incluyendo personalización de temas y configuración de plugins.
+- `postcss.config.js`: Configura PostCSS para usar Tailwind CSS y Autoprefixer.
+- `src/styles.css`: Importa los estilos base, componentes y utilidades de Tailwind CSS.
 
-For more information on using Tailwind CSS, visit the [Tailwind CSS Documentation](https://tailwindcss.com/docs).
+Para más información sobre el uso de Tailwind CSS, visita la [Documentación de Tailwind CSS](https://tailwindcss.com/docs).
 
-## Additional Resources
+## Recursos adicionales
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Para más información sobre el uso de Angular CLI, incluyendo referencias detalladas de comandos, visita la página de [Descripción general y referencia de comandos de Angular CLI](https://angular.dev/tools/cli).

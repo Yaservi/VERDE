@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { Plant } from '../../models/models';
 import { Subscription } from 'rxjs';
+import {
+  getEstadoDeConservacionText,
+  getEstatusBiogeograficoPlantaText
+} from '../../models/enums';
 
 @Component({
   selector: 'app-planta-detail',
@@ -30,33 +34,26 @@ export class PlantaDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Check if user is admin or editor (only in browser environment)
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
-        // In a real app, you would decode the token and check the role
-        // For now, we'll just check if a token exists
         this.isAdmin = true;
       }
 
-      // Get stored API URL if available
       const storedApiUrl = localStorage.getItem('apiBaseUrl');
       if (storedApiUrl) {
         this.apiUrl = storedApiUrl;
       } else {
-        // Default API URL
         this.apiUrl = 'https://localhost:7057/api';
       }
     }
 
-    // Subscribe to route parameter changes
     this.routeSubscription = this.route.paramMap.subscribe((params: ParamMap) => {
       this.loadPlantData(params);
     });
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription when component is destroyed
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
       this.routeSubscription = null;
@@ -64,11 +61,9 @@ export class PlantaDetailComponent implements OnInit, OnDestroy {
   }
 
   loadPlantData(params?: ParamMap): void {
-    // Reset state when loading new data
     this.planta = null;
     this.error = false;
 
-    // Get the plant ID from the route parameters or snapshot
     const paramMap = params || this.route.snapshot.paramMap;
     const id = paramMap.get('id');
 
@@ -81,30 +76,27 @@ export class PlantaDetailComponent implements OnInit, OnDestroy {
           console.log('Plant data loaded successfully:', data);
           this.planta = data;
           this.loading = false;
-          this.showApiConfig = false; // Hide config if successful
+          this.showApiConfig = false;
         },
         error: (err) => {
           console.error('Error fetching plant details:', err);
           this.error = true;
           this.loading = false;
-          this.showApiConfig = true; // Show config on error
+          this.showApiConfig = true;
         }
       });
     } else {
-      // Handle the case when no ID is provided or ID is 'undefined'
       this.loading = false;
 
       if (id === 'undefined') {
         console.error('Invalid plant ID: "undefined" - This suggests a problem with the search results');
         this.error = true;
-        this.showApiConfig = true; // Show config on error
+        this.showApiConfig = true;
       } else if (paramMap.has('id')) {
-        // Some other invalid ID case
         console.error(`Invalid plant ID: "${id}"`);
         this.error = true;
-        this.showApiConfig = true; // Show config on error
+        this.showApiConfig = true;
       } else {
-        // Root route case - no ID expected
         console.log('No ID provided - assuming root route');
       }
     }
@@ -128,5 +120,14 @@ export class PlantaDetailComponent implements OnInit, OnDestroy {
 
   closeMapModal(): void {
     this.showMapModal = false;
+  }
+
+  // Utility methods to convert enum values to text
+  getEstadoDeConservacionText(value: number | string): string {
+    return getEstadoDeConservacionText(value);
+  }
+
+  getEstatusBiogeograficoText(value: number | string): string {
+    return getEstatusBiogeograficoPlantaText(value);
   }
 }

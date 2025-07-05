@@ -43,23 +43,23 @@
         <div class="grid grid-cols-2 gap-4 mb-6">
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Dieta</span>
-            <p class="font-medium text-green-800">{{animal.dieta}}</p>
+            <p class="font-medium text-green-800">{{getDietaText(animal.dieta)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Estado de conservación</span>
-            <p class="font-medium text-green-800">{{animal.estadoDeConservacion}}</p>
+            <p class="font-medium text-green-800">{{getEstadoDeConservacionText(animal.estadoDeConservacion)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Forma de reproducción</span>
-            <p class="font-medium text-green-800">{{animal.formaDeReproduccion}}</p>
+            <p class="font-medium text-green-800">{{getFormaDeReproduccionText(animal.formaDeReproduccion)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Desarrollo embrionario</span>
-            <p class="font-medium text-green-800">{{animal.tipoDesarrolloEmbrionario}}</p>
+            <p class="font-medium text-green-800">{{getTipoDesarrolloEmbrionarioText(animal.tipoDesarrolloEmbrionario)}}</p>
           </div>
           <div class="bg-green-50 p-3 rounded-md border border-green-200">
             <span class="text-sm text-gray-500">Estatus biogeográfico</span>
-            <p class="font-medium text-green-800" *ngIf="animal.estatusBiogeografico">{{animal.estatusBiogeografico}}</p>
+            <p class="font-medium text-green-800" *ngIf="animal.estatusBiogeografico">{{getEstatusBiogeograficoText(animal.estatusBiogeografico)}}</p>
             <p class="font-medium text-green-800" *ngIf="!animal.estatusBiogeografico">No disponible</p>
           </div>
         </div>

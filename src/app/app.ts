@@ -15,26 +15,19 @@ import { SearchResult } from './models/models';
 export class App implements OnInit {
   protected title = 'FaunaEnriquilloFrontend';
 
-  // Scroll state
   isScrolled = false;
 
-  // Login state
   isLoggedIn = false;
-
-  // Navbar search
   navbarSearchExpanded = false;
   navbarSearchTerm = '';
   navbarSearchResults: SearchResult[] = [];
   navbarSearchLoading = false;
   navbarGroupedResults: { [key: string]: SearchResult[] } = {};
 
-  // Banner search
   bannerSearchTerm = '';
   bannerSearchResults: SearchResult[] = [];
   bannerSearchLoading = false;
   bannerGroupedResults: { [key: string]: SearchResult[] } = {};
-
-  // No longer need properties for selected entity details as they're now handled by the detail components
 
   constructor(
     private searchService: SearchService,
@@ -43,44 +36,34 @@ export class App implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Check if user is logged in (only in browser environment)
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       this.isLoggedIn = !!token;
     }
 
-    // Subscribe to search results
     this.searchService.getSearchResults().subscribe(response => {
       const { results, source } = response;
-
-      // Update the appropriate search results based on the source
       if (source === 'navbar') {
         this.navbarSearchResults = results;
         this.navbarGroupedResults = this.groupResultsByType(results);
         this.navbarSearchLoading = false;
-        // Manually trigger change detection
         this.cdr.detectChanges();
       } else if (source === 'banner') {
         this.bannerSearchResults = results;
         this.bannerGroupedResults = this.groupResultsByType(results);
         this.bannerSearchLoading = false;
-        // Manually trigger change detection
         this.cdr.detectChanges();
       }
     });
   }
 
-  // Handle scroll events
   @HostListener('window:scroll', [])
   onWindowScroll() {
     if (typeof window !== 'undefined') {
       this.isScrolled = window.scrollY > 50;
     }
   }
-
-  // Navbar search methods
   toggleNavbarSearch(): void {
-    // Exit if not in browser environment
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
@@ -88,7 +71,6 @@ export class App implements OnInit {
     this.navbarSearchExpanded = !this.navbarSearchExpanded;
 
     if (this.navbarSearchExpanded) {
-      // Use setTimeout to allow the DOM to update before focusing
       setTimeout(() => {
         const searchInitBtn = document.getElementById('search-init-btn');
         const searchContainer = document.getElementById('search-container');
@@ -129,7 +111,6 @@ export class App implements OnInit {
   }
 
   closeNavbarSearch(): void {
-    // Exit if not in browser environment
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
@@ -185,7 +166,6 @@ export class App implements OnInit {
     }
   }
 
-  // Banner search methods
   onBannerSearch(): void {
     if (this.bannerSearchTerm.trim()) {
       this.bannerSearchLoading = true;
@@ -194,49 +174,36 @@ export class App implements OnInit {
       this.bannerSearchResults = [];
     }
   }
-
-  // Entity details are now handled by the detail components
-
-  // Navigation to detail page
   navigateToDetail(result: SearchResult): void {
-    // Check if the ID is defined before navigating
     if (!result.id) {
       console.error('Error: ID is undefined for search result', result);
       return;
     }
 
-    // Navigate to the appropriate route based on entity type
     this.router.navigate([`detalle/${result.tipo}/${result.id}`]);
 
-    // Close navbar search if open
     if (this.navbarSearchExpanded) {
       this.closeNavbarSearch();
     }
-
-    // Clear banner search results
     this.bannerSearchTerm = '';
     this.bannerSearchResults = [];
     this.bannerGroupedResults = this.groupResultsByType([]);
   }
 
-  // Login/logout
   toggleLogin(): void {
     if (typeof window === 'undefined') {
-      return; // Exit if not in browser environment
+      return;
     }
 
     if (this.isLoggedIn) {
-      // Logout
       localStorage.removeItem('token');
       this.isLoggedIn = false;
     } else {
-      // For demo purposes, just set a dummy token
       localStorage.setItem('token', 'dummy-token');
       this.isLoggedIn = true;
     }
   }
 
-  // Helper method to group search results by type
   private groupResultsByType(results: SearchResult[]): { [key: string]: SearchResult[] } {
     const grouped: { [key: string]: SearchResult[] } = {
       'animal': [],

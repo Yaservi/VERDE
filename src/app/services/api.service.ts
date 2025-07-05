@@ -8,46 +8,35 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class ApiService {
   private baseUrl = '/api';
-  private apiVersion = 'v1';  // Using a specific version number
+  private apiVersion = 'v1';
 
   constructor(private http: HttpClient) {
-    // Try to get the API URL from localStorage if available
     if (typeof window !== 'undefined') {
       const storedBaseUrl = localStorage.getItem('apiBaseUrl');
       if (storedBaseUrl) {
-        // Use the setBaseUrl method to ensure proper handling of the URL
         this.setBaseUrl(storedBaseUrl);
       }
     }
   }
 
-  // Method to set the base URL
   setBaseUrl(url: string): void {
-    // If the URL is a full URL (starts with http:// or https://),
-    // we need to extract just the path for the proxy to work
     if (url.startsWith('http://') || url.startsWith('https://')) {
       try {
         const urlObj = new URL(url);
-        // Extract the path part (e.g., /api)
         this.baseUrl = urlObj.pathname;
         console.log(`Using proxied path: ${this.baseUrl}`);
       } catch (e) {
         console.error('Invalid URL format:', e);
-        // Fallback to the provided URL
         this.baseUrl = url;
       }
     } else {
-      // If it's already a relative path, use it as is
       this.baseUrl = url;
     }
-
-    // Store the URL in localStorage for persistence
     if (typeof window !== 'undefined') {
-      localStorage.setItem('apiBaseUrl', url); // Store the original URL for display purposes
+      localStorage.setItem('apiBaseUrl', url);
     }
   }
 
-  // Helper method to create headers
   private getHeaders() {
     return {
       'Content-Type': 'application/json',
@@ -55,22 +44,17 @@ export class ApiService {
     };
   }
 
-  // Helper method to create HTTP options with headers
   private getHttpOptions() {
     return {
       headers: this.getHeaders()
-      // Removed withCredentials: true as it was causing CORS issues
-      // The server needs to be configured to return Access-Control-Allow-Credentials: true
     };
   }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.error(errorMessage);
