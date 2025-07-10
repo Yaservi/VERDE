@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Plant } from '../models/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   private baseUrl = '/api';
@@ -40,13 +41,13 @@ export class ApiService {
   private getHeaders() {
     return {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      Accept: 'application/json',
     };
   }
 
   private getHttpOptions() {
     return {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
     };
   }
 
@@ -64,16 +65,22 @@ export class ApiService {
   private logResponse(endpoint: string) {
     return tap({
       next: (data) => console.log(`Response from ${endpoint}:`, data),
-      error: (error) => console.error(`Error from ${endpoint}:`, error)
+      error: (error) => console.error(`Error from ${endpoint}:`, error),
     });
   }
 
   // Animal endpoints
   searchAnimalByCommonName(commonName: string): Observable<any> {
     const encodedName = encodeURIComponent(commonName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/animal/search/commonName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/animal/search/commonName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchAnimalByCommonName:', data)),
+        tap((data) =>
+          console.log('Raw API response from searchAnimalByCommonName:', data)
+        ),
         this.logResponse('searchAnimalByCommonName'),
         catchError(this.handleError)
       );
@@ -81,9 +88,18 @@ export class ApiService {
 
   searchAnimalByScientificName(scientificName: string): Observable<any> {
     const encodedName = encodeURIComponent(scientificName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/animal/search/ScientificName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/animal/search/ScientificName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchAnimalByScientificName:', data)),
+        tap((data) =>
+          console.log(
+            'Raw API response from searchAnimalByScientificName:',
+            data
+          )
+        ),
         this.logResponse('searchAnimalByScientificName'),
         catchError(this.handleError)
       );
@@ -92,11 +108,17 @@ export class ApiService {
   getAnimalById(id: string): Observable<any> {
     const encodedId = encodeURIComponent(id);
     console.log(`Getting animal by ID: ${id} (encoded: ${encodedId})`);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/animal/${encodedId}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/animal/${encodedId}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from getAnimalById:', data)),
+        tap((data) =>
+          console.log('Raw API response from getAnimalById:', data)
+        ),
         this.logResponse('getAnimalById'),
-        catchError(error => {
+        catchError((error) => {
           console.error(`Error getting animal by ID ${id}:`, error);
           return this.handleError(error);
         })
@@ -106,9 +128,15 @@ export class ApiService {
   // Plant endpoints
   searchPlantByCommonName(commonName: string): Observable<any> {
     const encodedName = encodeURIComponent(commonName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/plant/search/commonName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/plant/search/commonName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchPlantByCommonName:', data)),
+        tap((data) =>
+          console.log('Raw API response from searchPlantByCommonName:', data)
+        ),
         this.logResponse('searchPlantByCommonName'),
         catchError(this.handleError)
       );
@@ -116,9 +144,18 @@ export class ApiService {
 
   searchPlantByScientificName(scientificName: string): Observable<any> {
     const encodedName = encodeURIComponent(scientificName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/plant/search/ScientificName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/plant/search/ScientificName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchPlantByScientificName:', data)),
+        tap((data) =>
+          console.log(
+            'Raw API response from searchPlantByScientificName:',
+            data
+          )
+        ),
         this.logResponse('searchPlantByScientificName'),
         catchError(this.handleError)
       );
@@ -127,23 +164,63 @@ export class ApiService {
   getPlantById(id: string): Observable<any> {
     const encodedId = encodeURIComponent(id);
     console.log(`Getting plant by ID: ${id} (encoded: ${encodedId})`);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/plant/${encodedId}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/plant/${encodedId}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from getPlantById:', data)),
+        tap((data) => console.log('Raw API response from getPlantById:', data)),
         this.logResponse('getPlantById'),
-        catchError(error => {
+        catchError((error) => {
           console.error(`Error getting plant by ID ${id}:`, error);
           return this.handleError(error);
         })
       );
   }
 
+  // GET: obtener todas las plantas paginadas
+  getPlants(pageNumber: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http
+      .get<Plant[]>(
+        `${this.baseUrl}/${this.apiVersion}/plant/Pagination?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        this.getHttpOptions()
+      )
+      .pipe(this.logResponse('getPlants'), catchError(this.handleError));
+  }
+
+  // POST: crear nueva planta
+  createPlant(formData: FormData): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/${this.apiVersion}/plant`, formData)
+      .pipe(this.logResponse('createPlant'), catchError(this.handleError));
+  }
+
+  // PUT: actualizar planta
+  updatePlant(id: string, formData: FormData): Observable<any> {
+    return this.http
+      .put(`${this.baseUrl}/${this.apiVersion}/plant/${id}`, formData)
+      .pipe(this.logResponse('updatePlant'), catchError(this.handleError));
+  }
+
+  // DELETE: eliminar planta
+  deletePlant(id: string): Observable<any> {
+    return this.http
+      .delete(`${this.baseUrl}/${this.apiVersion}/plant/${id}`)
+      .pipe(this.logResponse('deletePlant'), catchError(this.handleError));
+  }
   // Habitat endpoints
   searchHabitatByCommonName(commonName: string): Observable<any> {
     const encodedName = encodeURIComponent(commonName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/habitat/search/commonName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/habitat/search/commonName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchHabitatByCommonName:', data)),
+        tap((data) =>
+          console.log('Raw API response from searchHabitatByCommonName:', data)
+        ),
         this.logResponse('searchHabitatByCommonName'),
         catchError(this.handleError)
       );
@@ -151,9 +228,18 @@ export class ApiService {
 
   searchHabitatByScientificName(scientificName: string): Observable<any> {
     const encodedName = encodeURIComponent(scientificName);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/habitat/search/ScientificName/${encodedName}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/habitat/search/ScientificName/${encodedName}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from searchHabitatByScientificName:', data)),
+        tap((data) =>
+          console.log(
+            'Raw API response from searchHabitatByScientificName:',
+            data
+          )
+        ),
         this.logResponse('searchHabitatByScientificName'),
         catchError(this.handleError)
       );
@@ -162,11 +248,17 @@ export class ApiService {
   getHabitatById(id: string): Observable<any> {
     const encodedId = encodeURIComponent(id);
     console.log(`Getting habitat by ID: ${id} (encoded: ${encodedId})`);
-    return this.http.get(`${this.baseUrl}/${this.apiVersion}/habitat/${encodedId}`, this.getHttpOptions())
+    return this.http
+      .get(
+        `${this.baseUrl}/${this.apiVersion}/habitat/${encodedId}`,
+        this.getHttpOptions()
+      )
       .pipe(
-        tap(data => console.log('Raw API response from getHabitatById:', data)),
+        tap((data) =>
+          console.log('Raw API response from getHabitatById:', data)
+        ),
         this.logResponse('getHabitatById'),
-        catchError(error => {
+        catchError((error) => {
           console.error(`Error getting habitat by ID ${id}:`, error);
           return this.handleError(error);
         })
